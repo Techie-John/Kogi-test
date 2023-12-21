@@ -1,0 +1,553 @@
+{% extends 'base.html' %}
+{% load static %}
+
+    {% block content %}
+ <!--       
+        <h1>Playlist {{ playlist.name }}</h1>
+        <ul>
+          {% for track in tracks %}
+            <li>{{ track.title }} ({{ track.artist }})</li>
+          {% endfor %}
+        </ul>   
+     -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kogi Gospel</title>
+    <link rel='stylesheet' type='text/css' media='screen' href='{% static "css/bootstrap.css" %}'>
+    <link rel='icon' type='image' media='screen' href='{% static "img/logo.png" %}'>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;1,200;1,300;1,400;1,500&family=Quicksand:wght@300;400;500;600;700&display=swap');
+    
+    * {
+        padding: 0;
+        margin: 0;
+    }
+    
+    body {
+        background-color: #b8b8b8;
+        font-family: 'Montserrat', sans-serif;
+    }
+    
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 300px;
+        background-color: #131313;
+        padding: 24px;
+    }
+    
+
+    
+    .sidebar .navigation ul {
+        list-style: none;
+        margin-top: 20px;
+    }
+    
+    .sidebar .navigation ul li {
+        padding: 10px 0px;
+    }
+    
+    .sidebar .navigation ul li a {
+        color: #b3b3b3;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 18px;
+    }
+    
+    .sidebar .navigation ul li .fa {
+        font-size: 20px;
+        margin-right: 10px;
+    }
+    
+    .sidebar .navigation ul li a:hover {
+        color: #ffffff;
+    }
+    
+    .sidebar .policies {
+        position: absolute;
+        bottom: 100px;
+    }
+    
+    .sidebar .policies ul {
+        list-style: none;
+    }
+    
+    .sidebar .policies ul li {
+        padding-bottom: 5px;
+    }
+    
+    .sidebar .policies ul li a {
+        color: #b3b3b3;
+        font-weight: 500;
+        text-decoration: none;
+        font-size: 10px;
+    }
+    
+    .sidebar .policies ul li a:hover {
+        text-decoration: underline;
+    }
+    
+    
+    
+    .spotify-playlists {
+        padding: 20px 40px;
+    }
+    
+    .spotify-playlists h2 {
+        color: #ffffff;
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+    
+    .spotify-playlists .list {
+        display: flex;
+        gap: 20px;
+        overflow: hidden;
+    }
+    
+    .spotify-playlists .list .item {
+        min-width: 140px;
+        width: 160px;
+        padding: 15px;
+        background-color: #181818;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all ease 0.4s;
+    }
+    
+    .spotify-playlists .list .item:hover {
+        background-color: #252525;
+    }
+    
+    
+    
+    .spotify-playlists .list .item img {
+        width: 100%;
+        border-radius: 6px;
+        margin-bottom: 10px;
+    }
+    
+    .spotify-playlists .list .item .play {
+        position: relative;
+    }
+    
+    .spotify-playlists .list .item .play .fa {
+        position: absolute;
+        right: 10px;
+        top: -60px;
+        padding: 18px;
+        background-color: #1db954;
+        border-radius: 100%;
+        opacity: 0;
+        transition: all ease 0.4s;
+    }
+    
+    .spotify-playlists .list .item:hover .play .fa {
+        opacity: 1;
+        transform: translateY(-20px);
+    }
+    
+    .spotify-playlists .list .item h4 {
+        color: #ffffff;
+        font-size: 14px;
+        margin-bottom: 10px;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .spotify-playlists .list .item p {
+        color: #989898;
+        font-size: 12px;
+        line-height: 20px;
+        font-weight: 500;
+    }
+    
+    .spotify-playlists hr {
+        margin: 70px 0px 0px;
+        border-color: #636363;
+    }
+    
+    .preview {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to right, #07aa5e, #1d1f1d);
+        padding: 15px 40px;
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .preview h6 {
+        color: #ffffff;
+        text-transform: uppercase;
+        font-weight: 400;
+        font-size: 12px;
+        margin-bottom: 10px;
+    }
+    
+    .preview p {
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 500;
+    }
+    
+    .preview button {
+        background-color: #ffffff;
+        color: #000000;
+        font-size: 16px;
+        font-weight: bold;
+        padding: 14px 30px;
+        border: 0px;
+        border-radius: 40px;
+        cursor: pointer;
+    }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        
+
+        <div class="navigation">
+            <div class="logo">
+                <a href="">
+                    <img src="{% static 'img/logo.png' %}" alt="Logo" height="50px">
+                </a>
+            </div>
+            <ul>
+                <li>
+                    <a href="">
+                        <span class="fa fa-home"></span>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'search_songs' %}">
+                        <span class="fa fa-search"></span>
+                        <span>Search</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <span class="fa fas fa-book"></span>
+                        <span>Your Library</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="">
+                        <span class="fa fa-home"></span>
+                        <span>Create Playlist</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <span class="fa fa-search"></span>
+                        <span>Liked Songs</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+
+        <div class="policies">
+            <ul>
+                <li>
+                    <a href="">Cookies</a>
+                </li>
+                <li>
+                    <a href="">Privacy</a>
+                </li>
+            </ul>
+        </div>
+
+
+    </div>
+
+    
+        
+        <div class="spotify-playlists">
+            <h2>Kogi Gospel Playlists</h2>
+          {% for song in allSongs %}
+            <div class="list">
+                <div class="item">
+                    <img src="{{song.songThumbnail.url}}" alt="{{song.songName}}"/>
+                    <script>
+                      function myFunction() {
+                        document.getElementById("music").innerHTML = "Hello World";
+                      }
+                      </script>
+                    <div class="play">
+                    <!--<span class="fa fa-play"></span> -->
+                        
+                    </div>
+                    <h4>{{song.songName}}</h4>
+                    <p>{{song.album.artist.artistName}}</p>
+                    <p>Uploaded {{song.last_updated | timesince}} ago</p>
+                    <audio controls id="music" style="display:none;">
+                      <source src="{{song.song.url}}" type="audio/mpeg" id="music">
+                      Your browser does not support the audio tag.
+                    </audio>
+                    {% if user.is_authenticated %}
+                    <a href="{{song.song.url}}" download="{{song.songName}}">
+                      <style>
+                        .button{
+                        background-color: #ffffff;
+                        color: #000000;
+                        font-size: 16px;
+                        font-weight: bold;
+                        padding: 10px 20px;
+                        border: 0px;
+                        border-radius: 40px;
+                        cursor:pointer;
+                        }
+                      </style>
+                    <button class="button">Download</button>
+                    </a>
+                    {% else %}
+                    {% endif %}
+                    <div class="col-md-2">
+                      <div class="play-button d-flex h-100 justify-content-center align-items-center float-left">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="white" class="bi bi-play-circle" viewBox="0 0 16 16">Play
+                              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                              <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/>
+                          </svg>
+                      </div>
+                      <div class="audio-file d-none">
+                          <audio controls>
+                              <source src="{{song.song.url}}" type="audio/mpeg">
+                              Your browser does not support the audio tag.
+                            </audio>
+                      </div>
+                  </div>
+                </div>
+          {% endfor %}
+
+<br>    
+<div class="spotify-playlists">
+            <h2>Promoted Songs</h2>
+            {% for promote in promoted %}
+            <div class="list">
+                <div class="item">
+                    <img src="{{promote.songThumbnail.url}}" />
+                    <div class="play">
+                        <span class="fa fa-play"><audio src="{{promote.song.url}}"></audio></span>
+                    </div>
+                    <h4>{{promote.songName}}</h4>
+                    <p>{{promote.album.artist.artistName}}!</p>
+                    <p>Uploaded {{promote.last_updated | timesince}} ago</p>
+                </div>
+            {% endfor %}
+
+    </div>
+
+    <div class="preview">
+        <div class="text">
+                <div class="audio-player-container">
+                  <audio id="audio-player" class="audio-player__audio">
+                    <source src="{{song.song.url}}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                  </audio>
+                  </div>
+                  <div class="audio-player-controls">
+                    <button class="audio-player-play" id="play-pause">
+                      <i class="fa fa-play"></i>
+                    </button>
+                    <button class="audio-player-prev" id="prev-song">
+                      <i class="fa fa-step-backward"></i>
+                    </button>
+                    <button class="audio-player-next" id="next-song">
+                      <i class="fa fa-step-forward"></i>
+                    </button>
+                  </div>
+            </div>
+    </div>
+
+
+    <script src="https://kit.fontawesome.com/ef9a692198.js" crossorigin="anonymous"></script>
+ <!--  <footer class="sticky-footer">
+        <div class="container">
+          <div class="audio-player">
+            <div class="audio-player-container">
+              <audio id="audio-player" class="audio-player__audio">
+                <source src="{{song.songThumbnail.url}}" type="audio/mpeg">
+                Your browser does not support the audio element.
+              </audio>
+              </div>
+              <div class="audio-player-controls">
+                <button class="audio-player-play" id="play-pause">
+                  <i class="fa fa-play"></i>
+                </button>
+                <button class="audio-player-prev" id="prev-song">
+                  <i class="fa fa-step-backward"></i>
+                </button>
+                <button class="audio-player-next" id="next-song">
+                  <i class="fa fa-step-forward"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer> 
+    <style>
+      footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  border-top: 1px solid #333;
+}
+
+/* Audio player */
+.audio-player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.audio-player-container {
+  width: 100%;
+  height: 30px;
+  background-color: #333;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.audio-player-audio {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.audio-player-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.audio-player-play,
+.audio-player-prev,
+.audio-player-next {
+  display: inline-block;
+  margin: 0 10px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.audio-player-play {
+  color: #fff;
+  background-color: #333;
+}
+
+.audio-player-prev {
+  color: #fff;
+  background-color: #666;
+}
+
+.audio-player-next {
+  color: #fff;
+  background-color: #666;
+}
+
+/* Icon fonts */
+.fa {
+  font-size: 24px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  footer {
+    flex-direction: column;
+  }
+  .audio-player {
+    flex-direction: column;
+  }
+  .audio-player-container {
+    height: 40px;
+  }
+  .audio-player-controls {
+    flex-direction: column;
+  }
+}
+    </style> -->
+    <script>
+      // Get audio player element
+const audioPlayer = document.getElementById('audio-player');
+
+// Get song ID from URL parameter
+const songId = window.location.href.split('/').pop();
+
+// Set audio source URL
+audioPlayer.src = `/songs/${songId}/audio/`;
+
+// Play audio when play button is clicked
+document.getElementById('play-pause').addEventListener('click', () => {
+  audioPlayer.play();
+});
+
+// Pause audio when pause button is clicked
+document.getElementById('pause').addEventListener('click', () => {
+  audioPlayer.pause();
+});
+
+// Next song button click event
+document.getElementById('next-song').addEventListener('click', () => {
+  // Get next song ID
+  const nextSongId = songId + 1;
+
+  // Check if next song exists
+  if (nextSongId <= songs.length) {
+    // Set audio source URL and play next song
+    audioPlayer.src = `/songs/${nextSongId}/audio/`;
+    audioPlayer.play();
+  } else {
+    // If no next song, loop back to first song
+    audioPlayer.src = `/songs/0/audio/`;
+    audioPlayer.play();
+  }
+});
+
+// Previous song button click event
+document.getElementById('prev-song').addEventListener('click', () => {
+  // Get previous song ID
+  const prevSongId = songId - 1;
+
+  // Check if previous song exists
+  if (prevSongId >= 0) {
+    // Set audio source URL and play previous song
+    audioPlayer.src = `/songs/${prevSongId}/audio/`;
+    audioPlayer.play();
+  } else {
+    // If no previous song, loop back to last song
+    audioPlayer.src = `/songs/${songs.length - audio/;
+    audioPlayer.play();
+  }
+});
+</script>
+
+</body>
+{% endblock %}
+</html>
+  

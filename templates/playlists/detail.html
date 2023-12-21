@@ -1,0 +1,10 @@
+
+
+{% block content %}
+  <h1>Playlist {{ playlist.name }}</h1>
+  <ul>
+    {% for track in tracks %}
+      <li>{{ track.title }} ({{ track.artist }})</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>{% block title %}Kogi Gospel | Home {% endblock %}</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='{% static "css/bootstrap.css" %}'>
+    <link rel='icon' type='image' media='screen' href='{% static "img/logo.png" %}'>
+    <script src='main.js'></script>
+   <!-- <script src="{% static 'js/bootstrap.min.js' %}"></script>-->
+   
+   <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+   <script src="{% static 'js/main.js' %}"></script>
+</head>
+
+<style>
+  .main-container {
+        margin-left: 350px;
+        margin-bottom: 100px;
+    }
+    
+    .topbar {
+        display: flex;
+        justify-content: space-between;
+        background-color: rgb(0, 114, 25);
+        padding: 14px 30px;
+    }
+    
+    .topbar .prev-next-buttons button {
+        color: #7a7a7a;
+        cursor: not-allowed;
+        width: 34px;
+        height: 34px;
+        border-radius: 100%;
+        font-size: 18px;
+        border: 0px;
+        background-color: #090909;
+        margin-right: 10px;
+    }
+    
+    .topbar .navbar {
+        display: flex;
+        align-items: center;
+    }
+    
+    .topbar .navbar ul {
+        list-style: none;
+    }
+    
+    .topbar .navbar ul li {
+        display: inline-block;
+        margin: 0px 8px;
+        width: 70px;
+    }
+    
+    .topbar .navbar ul li a {
+        color: #b3b3b3;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 14px;
+        letter-spacing: 1px;
+    }
+    
+    .topbar .navbar ul li a:hover {
+        color: #ffffff;
+        font-size: 15px;
+    }
+    
+    .topbar .navbar button {
+        background-color: #ffffff;
+        color: #000000;
+        font-size: 16px;
+        font-weight: bold;
+        padding: 14px 30px;
+        border: 0px;
+        border-radius: 40px;
+        cursor: pointer;
+        margin-left: 20px;
+    }
+    
+    .topbar .navbar button:hover {
+        background-color: #f2f2f2;
+    }
+    .avatar {
+    vertical-align: middle;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+</style>
+<div class="main-container">
+  <div class="topbar">
+    <img src="{{user.profile_photo.url}}" alt="Avatar" class="avatar">
+
+      <div class="navbar">
+        {% if user.is_authenticated %}
+        
+        <li class="na-item">
+            <button type="button"><a class="nav-link" href="{% url 'logout' %}">Logout</a></button></li>
+        {% else %}
+        <li class="na-item">
+            <button type="button"><a class="nav-link" href="{% url 'login' %}">Login</a></button></li>
+            
+        <li class="na-item">
+            <a href="{% url 'signup' %}" class="nav-link">Sign Up</a>
+        </li>
+        
+        {% endif %}
+      </div>
+  </div>
+<body>
+
+    {% block content %}
+    
+    
+    {% endblock %}
+</body>
+</html>
+
